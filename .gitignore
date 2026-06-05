@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data - raw downloaded source files (binary, large)
+data/raw/*.xlsx
+data/raw/*.csv
+
+# Testing
+.pytest_cache/
+coverage/
+htmlcov/
+*.coverage
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log

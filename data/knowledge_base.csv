@@ -1,0 +1,67 @@
+category,subcategory,item,unit,co2_kg,country_region,year,source,notes
+Freight,Road,Van (up to 1.305t),km,0.20071,UK,2024,DEFRA,
+Freight,Road,Van (up to 1.305t),tonne.km,0.85353,UK,2024,DEFRA,
+Freight,Road,Van (1.305-1.74t),km,0.21709,UK,2024,DEFRA,
+Freight,Road,HGV rigid (>3.5-17t),km,0.70317,UK,2024,DEFRA,Average rigid HGV
+Freight,Road,HGV articulated (>3.5-33t),km,0.87504,UK,2024,DEFRA,Average articulated HGV
+Freight,Road,HGV all diesel,tonne.km,0.184,UK,2024,DEFRA,Average all HGV types
+Freight,Road,HGV refrigerated,km,1.28589,UK,2024,DEFRA,
+Freight,Air,Domestic flight,tonne.km,3.15184,UK,2024,DEFRA,Freight by air
+Freight,Air,Short-haul flight,tonne.km,1.6075,UK,2024,DEFRA,
+Freight,Air,Long-haul flight,tonne.km,0.88917,UK,2024,DEFRA,
+Freight,Sea,Sea tanker,tonne.km,0.01783,UK,2024,DEFRA,
+Freight,Sea,Cargo ship,tonne.km,0.01783,UK,2024,DEFRA,
+Freight,Rail,Freight rail,tonne.km,0.03077,UK,2024,DEFRA,
+Travel,Air,Domestic flight,passenger.km,0.27257,UK,2024,DEFRA,Economy class
+Travel,Air,Domestic flight,km,0.27257,UK,2024,DEFRA,Economy class
+Travel,Air,Short-haul flight (<3700km),passenger.km,0.18592,UK,2024,DEFRA,Economy class
+Travel,Air,Long-haul flight (>3700km),passenger.km,0.26128,UK,2024,DEFRA,Economy class
+Travel,Car,Average car,km,0.17421,UK,2024,DEFRA,Average all sizes & fuel types
+Travel,Car,Average car,miles,0.28035,UK,2024,DEFRA,Average all sizes & fuel types
+Travel,Taxi,Taxi,km,0.20708,UK,2024,DEFRA,
+Travel,Bus,Local bus,km,0.83565,UK,2024,DEFRA,Per vehicle km
+Travel,Bus,Average bus,passenger.km,0.11142,UK,2024,DEFRA,
+Travel,Rail,National rail,passenger.km,0.0375,UK,2024,DEFRA,
+Travel,Rail,London Underground,passenger.km,0.03565,UK,2024,DEFRA,
+Travel,Rail,Light rail/tram,passenger.km,0.04632,UK,2024,DEFRA,
+Travel,Hotel,Hotel stay (UK),room.night,10.4,UK,2024,DEFRA,
+Travel,Hotel,Hotel stay (UK London),room.night,11.5,UK,2024,DEFRA,
+Energy,Electricity,Grid electricity (UK),kWh,0.20705,UK,2024,DEFRA,Direct emissions only
+Energy,Electricity,Grid electricity (US),kWh,0.37,US,2024,EPA,US national average
+Energy,Electricity,Grid electricity (Global),kWh,0.475,Global,2024,IEA/EDGAR,Global average
+Energy,Natural Gas,Natural gas (UK),kWh,0.18316,UK,2024,DEFRA,Per kWh net CV
+Energy,Natural Gas,Natural gas (US),kWh,0.18123,US,2024,EPA,53.06 kg CO2/mmBtu
+Energy,Natural Gas,Natural gas (US),mmBtu,53.06,US,2024,EPA,
+Energy,Fuel Oil,Gas oil / diesel,kWh,0.26628,UK,2024,DEFRA,
+Energy,Fuel Oil,Gas oil / diesel,litre,2.68778,UK,2024,DEFRA,
+Energy,Fuel Oil,Petrol,kWh,0.24527,UK,2024,DEFRA,
+Energy,Fuel Oil,Petrol,litre,2.20614,UK,2024,DEFRA,
+Materials,Construction,Aggregates,tonne,7.75127,UK,2024,DEFRA,Per tonne material
+Materials,Construction,Concrete,tonne,118.75127,UK,2024,DEFRA,
+Materials,Construction,Bricks,tonne,241.75127,UK,2024,DEFRA,
+Materials,Construction,Average construction,tonne,74.88652,UK,2024,DEFRA,
+Materials,Metal,Steel,tonne,2340.48267,UK,2024,DEFRA,Average steel
+Materials,Metal,Aluminium,tonne,6694.29802,UK,2024,DEFRA,
+Materials,Metal,Average metal,tonne,2475.77699,UK,2024,DEFRA,
+Materials,Plastic,Average plastic,tonne,2587.89676,UK,2024,DEFRA,
+Materials,Paper,Average paper,tonne,897.4886,UK,2024,DEFRA,
+Materials,Organic,Average organic,tonne,398.961,UK,2024,DEFRA,
+Materials,Electrical,Average electrical items,tonne,924.51877,UK,2024,DEFRA,
+Packaging,Plastic,Plastic packaging,kg,2.587,UK,2024,DEFRA,From plastic material factor /1000
+Packaging,Paper,Cardboard / paper packaging,kg,0.897,UK,2024,DEFRA,From paper material factor /1000
+Packaging,Wood,Wooden pallet,kg,0.327,UK,2024,DEFRA,From wood/biomass factor
+Services,Professional,Consulting / professional services,USD,0.08,Global,2024,EPA/EDGAR,"Per $ spend, estimated avg"
+Services,Software,Software / IT services,USD,0.05,Global,2024,EPA/EDGAR,"Per $ spend, estimated avg"
+Services,Cleaning,Cleaning / facility services,USD,0.12,Global,2024,EPA/EDGAR,"Per $ spend, estimated avg"
+Waste,General,Mixed municipal waste,tonne,408.8,UK,2024,DEFRA,Open-loop recycling
+Waste,General,Mixed municipal waste,kg,0.409,UK,2024,DEFRA,
+Waste,Plastic,Plastic waste,tonne,1657.0,UK,2024,DEFRA,Open-loop recycling
+Waste,Paper,Paper waste,tonne,649.0,UK,2024,DEFRA,Open-loop recycling
+Waste,Organic,Organic / food waste,tonne,399.0,UK,2024,DEFRA,Open-loop recycling
+Waste,Metal,Metal waste,tonne,2475.0,UK,2024,DEFRA,Open-loop recycling
+Water,Supply,Water supply (UK),m3,0.15311,UK,2024,DEFRA,
+Water,Treatment,Water treatment (UK),m3,0.33274,UK,2024,DEFRA,
+General,GDP-based,CO2 per $ GDP (Global),USD,0.26,Global,2024,OWID,Global avg: ~0.26 kg CO2 per $ GDP
+General,GDP-based,CO2 per $ GDP (US),USD,0.2,US,2024,OWID,US avg
+General,GDP-based,CO2 per $ GDP (EU),USD,0.14,EU,2024,OWID,EU avg
+General,GDP-based,CO2 per $ GDP (China),USD,0.45,CN,2024,OWID,China avg
