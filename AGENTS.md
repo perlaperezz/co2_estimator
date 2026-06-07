@@ -10,19 +10,20 @@ This tool reads uploaded invoices, estimates their CO2 footprint, calculates how
 
 - **Floras** is both the company and the climate currency unit
 - **1.25% base rate** — supplier contributes this percentage of each transaction
-- **Floras currency** — converted from the contribution, used to fund carbon projects
-- **Projects** — reforestation, SAF (Sustainable Aviation Fuel), biochar, renewable energy, etc.
+- **Floras currency** — converted from the contribution ($1 = 1 Flora), used to fund carbon projects
+- **Projects** — 18 projects across 11 categories (reforestation, SAF, biochar, renewable energy, etc.)
 - **Users** — enterprises who receive invoices from suppliers and want to understand/improve their climate impact
 
 ## Tech Stack
 
 | Layer | Choice |
 |-------|--------|
-| Backend | Python 3.11+, FastAPI |
+| Backend | Python 3.9+, FastAPI |
 | Frontend | Jinja2 templates + Tailwind CSS (CDN) |
-| Invoice parsing | pdf2image → OCR (pytesseract) → DeepSeek V4 Flash (via OpenCode) |
-| AI orchestration | OpenCode with `deepseek-v4-flash` for orchestrator (invoice reading + analysis) |
+| Invoice parsing | Regex-based line item extraction (primary) + pypdf (text PDFs) + pdf2image/tesseract (scanned PDFs, optional) |
+| AI orchestration | OpenCode with `deepseek-v4-flash` for orchestrator (future: invoice reading + analysis) |
 | CO2 knowledge base | Local CSV (`data/knowledge_base.csv`) distilled from EPA, DEFRA, OWID, EDGAR |
+| Floras projects | Local CSV (`data/floras_projects.csv`) with 18 projects and co2e_per_flora rates |
 | Demo stability | Always prioritized over new features |
 
 ## Agent Role Mapping (oh-my-opencode-slim.json)

@@ -5,22 +5,24 @@
 - [x] Project initialization (AGENTS.md, TODO.md, LOG.md, .gitignore, data dirs)
 - [x] Download source data (EPA, DEFRA, OWID, EDGAR)
 - [x] Create knowledge_base.csv with distilled emission factors
-- [ ] Create `requirements.txt` (fastapi, uvicorn, pdf2image, pytesseract, pandas, jinja2, python-multipart)
-- [ ] Implement `src/data/seed.py` — script to rebuild knowledge_base.csv from raw sources
-- [ ] Implement `src/services/kb.py` — knowledge base loader and query engine
-- [ ] Implement `src/services/parser.py` — PDF upload → OCR → raw text
-- [ ] Implement `src/services/categorizer.py` — classify invoice line items
-- [ ] Implement `src/services/estimator.py` — CO2 estimation per item
-- [ ] Implement `src/services/florascalc.py` — Floras offset calculation
-- [ ] Implement `src/services/recommender.py` — rate + project recommendations
-- [ ] Implement `src/models/invoice.py` — Pydantic schemas
-- [ ] Implement `src/models/floraspay.py` — Pydantic schemas
-- [ ] Implement `src/config.py` — settings
-- [ ] Implement `src/web/routes.py` — FastAPI endpoints
-- [ ] Build `src/web/templates/base.html` — layout shell
-- [ ] Build `src/web/templates/index.html` — upload + results page
-- [ ] Wire up `src/main.py` — FastAPI app entry point
-- [ ] Test end-to-end demo flow with a sample PDF invoice
+- [x] Create `requirements.txt` (fastapi, uvicorn, pdf2image, pytesseract, pandas, jinja2, python-multipart, pypdf)
+- [x] Implement `src/data/seed.py` — script to rebuild knowledge_base.csv from raw sources
+- [x] Implement `src/services/kb.py` — knowledge base loader and query engine
+- [x] Implement `src/services/parser.py` — text + PDF parse with regex line-item extraction
+- [x] Implement `src/services/categorizer.py` — classify invoice line items
+- [x] Implement `src/services/estimator.py` — CO2 estimation per item
+- [x] Implement `src/services/projects.py` — floras_projects.csv loader
+- [x] Implement `src/services/florascalc.py` — Floras offset calculation
+- [x] Implement `src/services/recommender.py` — rate + project recommendations
+- [x] Implement `src/models/invoice.py` — Pydantic schemas
+- [x] Implement `src/models/floraspay.py` — Pydantic schemas
+- [x] Implement `src/config.py` — settings
+- [x] Implement `src/web/routes.py` — FastAPI endpoints
+- [x] Build `src/web/templates/base.html` — layout shell
+- [x] Build `src/web/templates/index.html` — upload + results page
+- [x] Wire up `src/main.py` — FastAPI app entry point
+- [x] Test end-to-end demo flow with sample invoice (paste text)
+- [ ] Test PDF upload flow
 - [ ] Polish UI for mentor demo
 - [ ] Write demo script (~10 min walkthrough)
 
