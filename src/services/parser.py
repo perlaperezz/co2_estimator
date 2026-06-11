@@ -2,6 +2,7 @@ import re
 import io
 from typing import List, Tuple, Optional
 from src.models.invoice import InvoiceItem
+from src.services.vision import extract_from_pdf_vision
 
 
 def parse_text(text: str) -> Tuple[List[InvoiceItem], float]:
@@ -101,6 +102,46 @@ def parse_text(text: str) -> Tuple[List[InvoiceItem], float]:
     return items, round(final_total, 2)
 
 
+def extract_from_pdf(file_bytes: bytes) -> Optional[Tuple[List[InvoiceItem], float]]:
+    result = extract_from_pdf_vision(file_bytes)
+    if result is not None:
+        return result
+    return _extract_text_from_pdf_fallback(file_bytes)
+
+
+def _extract_text_from_pdf_fallback(file_bytes: bytes) -> Optional[Tuple[List[InvoiceItem], float]]:
+    try:
+        from pypdf import PdfReader
+        reader = PdfReader(io.BytesIO(file_bytes))
+        text = ""
+        for page in reader.pages:
+            page_text = page.extract_text()
+            if page_text:
+                text += page_text + "\n"
+        if text.strip():
+            items, total = parse_text(text)
+            if items:
+                return items, total
+    except Exception:
+        pass
+
+    try:
+        from pdf2image import convert_from_bytes
+        import pytesseract
+        images = convert_from_bytes(file_bytes)
+        text = ""
+        for img in images:
+            text += pytesseract.image_to_string(img) + "\n"
+        if text.strip():
+            items, total = parse_text(text)
+            if items:
+                return items, total
+    except Exception:
+        pass
+
+    return None
+
+
 def _parse_amount(s: str) -> float:
     cleaned = s.strip().replace(",", "").replace("$", "").replace("€", "").replace("£", "")
     try:
@@ -165,33 +206,4 @@ def _parse_line(line: str) -> Optional[InvoiceItem]:
             item = builder(m)
             if item.description and len(item.description) > 1:
                 return item
-    return None
-
-
-def extract_text_from_pdf(file_bytes: bytes) -> Optional[str]:
-    try:
-        from pypdf import PdfReader
-        reader = PdfReader(io.BytesIO(file_bytes))
-        text = ""
-        for page in reader.pages:
-            page_text = page.extract_text()
-            if page_text:
-                text += page_text + "\n"
-        if text.strip():
-            return text
-    except Exception:
-        pass
-
-    try:
-        from pdf2image import convert_from_bytes
-        import pytesseract
-        images = convert_from_bytes(file_bytes)
-        text = ""
-        for img in images:
-            text += pytesseract.image_to_string(img) + "\n"
-        if text.strip():
-            return text
-    except Exception:
-        pass
-
     return None

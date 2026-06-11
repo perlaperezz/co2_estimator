@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from typing import Optional
 import os
 
-from src.services.parser import parse_text, extract_text_from_pdf
+from src.services.parser import parse_text, extract_from_pdf
 from src.services.estimator import estimate_item
 from src.services.recommender import get_recommendation
 from src.config import settings
@@ -34,19 +34,24 @@ async def analyze(
     total_amount: float = Form(0.0),
     rate: float = Form(settings.FLORAS_BASE_RATE),
 ):
+    items: list = []
+    parsed_total: float = 0.0
+    raw_text: str = ""
+
     if pdf_file and pdf_file.filename and pdf_file.filename.lower().endswith(".pdf"):
         file_bytes = await pdf_file.read()
-        extracted = extract_text_from_pdf(file_bytes)
-        if extracted is None:
+        result = extract_from_pdf(file_bytes)
+        if result is None:
             return templates.TemplateResponse("index.html", {
                 "request": request,
                 "result": None,
-                "error": "Could not extract text from PDF. Try a text-based PDF or paste invoice text.",
+                "error": "Could not extract line items from PDF. The AI vision parser failed. Try pasting invoice text instead.",
                 "sample_text": "",
             })
-        raw_text = extracted
+        items, parsed_total = result
     elif invoice_text:
         raw_text = invoice_text
+        items, parsed_total = parse_text(raw_text)
     else:
         return templates.TemplateResponse("index.html", {
             "request": request,
@@ -54,8 +59,6 @@ async def analyze(
             "error": "Please provide invoice text or upload a PDF.",
             "sample_text": "",
         })
-
-    items, parsed_total = parse_text(raw_text)
 
     if not items:
         preview = raw_text[:500] if raw_text else ""
