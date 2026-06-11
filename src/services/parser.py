@@ -10,11 +10,16 @@ def parse_text(text: str) -> Tuple[List[InvoiceItem], float]:
     total_amount: float = 0.0
     captured_total: Optional[float] = None
     metadata_lines = ["invoice", "date", "total", "subtotal", "tax", "page", "supplier",
-                      "from:", "bill to", "ship to", "payment", "due", "reference", "note"]
+                      "from:", "bill to", "ship to", "payment", "due", "reference", "note",
+                      "item", "qty", "description", "description:", "quantity:", "quantity",
+                      "unit price:", "rate:", "amount:", "subtotal:", "total:"]
+
+    pending_desc: Optional[str] = None
 
     for line in lines:
         stripped = line.strip()
         if not stripped:
+            pending_desc = None
             continue
 
         lower = stripped.lower()
@@ -22,12 +27,30 @@ def parse_text(text: str) -> Tuple[List[InvoiceItem], float]:
             m = re.search(r'[\$€£]?\s*([\d,]+\.?\d*)', stripped)
             if m:
                 captured_total = _parse_amount(m.group(1))
+            pending_desc = None
             continue
-        if any(stripped.lower().startswith(m) for m in metadata_lines):
+        if any(lower.startswith(m) for m in metadata_lines):
+            pending_desc = None
             continue
+
+        # Pure-number line — could be a price for a pending description
+        if re.match(r'^[\d\.]+$', stripped) and pending_desc is not None:
+            price = _parse_amount(stripped)
+            if price > 0:
+                items.append(InvoiceItem(
+                    description=pending_desc,
+                    quantity=1,
+                    total_price=price,
+                ))
+                total_amount += price
+                pending_desc = None
+                continue
+
         if re.match(r'^[\d\s\.\-,]*$', stripped):
+            pending_desc = None
             continue
         if len(stripped) < 4:
+            pending_desc = None
             continue
 
         item = _parse_line(stripped)
@@ -35,6 +58,36 @@ def parse_text(text: str) -> Tuple[List[InvoiceItem], float]:
             items.append(item)
             if item.total_price is not None:
                 total_amount += item.total_price
+            pending_desc = None
+            continue
+
+        # Check if line is a standalone price — pair with previously pending description
+        price_match = re.match(r'^\$?([\d,]+\.?\d*)\s*$', stripped)
+        if price_match and pending_desc is not None:
+            price = _parse_amount(price_match.group(1))
+            items.append(InvoiceItem(
+                description=pending_desc,
+                quantity=1,
+                total_price=price,
+            ))
+            total_amount += price
+            pending_desc = None
+            continue
+
+        # Check if line ends with a price — try simple description + price parse
+        end_price = re.search(r'^(.+?)\s+\$?([\d,]+\.?\d*)\s*$', stripped)
+        if end_price:
+            items.append(InvoiceItem(
+                description=end_price.group(1).strip(),
+                quantity=1,
+                total_price=_parse_amount(end_price.group(2)),
+            ))
+            total_amount += _parse_amount(end_price.group(2))
+            pending_desc = None
+            continue
+
+        # Save as pending description for next-line price pairing
+        pending_desc = stripped
 
     final_total = captured_total if captured_total is not None else total_amount
 
@@ -59,7 +112,7 @@ def _parse_amount(s: str) -> float:
 def _parse_line(line: str) -> Optional[InvoiceItem]:
     patterns = [
         # 5-column table: Description  Qty  Unit  UnitPrice  Total
-        (r'^(.+?)\s{2,}(\d+(?:\.\d+)?)\s{2,}([a-zA-Z/]+)\s{2,}\$?([\d,]+\.?\d*)\s{2,}\$?([\d,]+\.?\d*)\s*$',
+        (r'^(.+?)\s+(\d+(?:\.\d+)?)\s+([a-zA-Z/]+)\s+\$?([\d,]+\.?\d*)\s+\$?([\d,]+\.?\d*)\s*$',
          lambda m: InvoiceItem(
              description=m.group(1).strip(),
              quantity=float(m.group(2)),
@@ -91,14 +144,14 @@ def _parse_line(line: str) -> Optional[InvoiceItem]:
              total_price=_parse_amount(m.group(2)),
          )),
         # Qty followed by Description and Price (no unit column)
-        (r'^(\d+(?:\.\d+)?)\s+(.+?)\s{2,}\$?([\d,]+\.?\d*)\s*$',
+        (r'^(\d+(?:\.\d+)?)\s+(.+?)\s+\$?([\d,]+\.?\d*)\s*$',
          lambda m: InvoiceItem(
              description=m.group(2).strip(),
              quantity=float(m.group(1)),
              total_price=_parse_amount(m.group(3)),
          )),
         # Description ... Price (simple line)
-        (r'^(.+?)\s{2,}\$?([\d,]+\.?\d*)\s*$',
+        (r'^(.+?)\s+\$?([\d,]+\.?\d*)\s*$',
          lambda m: InvoiceItem(
              description=m.group(1).strip(),
              quantity=1,

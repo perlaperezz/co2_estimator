@@ -58,11 +58,12 @@ async def analyze(
     items, parsed_total = parse_text(raw_text)
 
     if not items:
+        preview = raw_text[:500] if raw_text else ""
         return templates.TemplateResponse("index.html", {
             "request": request,
             "result": None,
-            "error": "Could not parse any line items from the provided text. Check format.",
-            "sample_text": "",
+            "error": "Could not parse any line items. Raw text received:<br><pre style='font-size:12px;max-height:200px;overflow:auto'>" + preview + "</pre>",
+            "sample_text": raw_text,
         })
 
     effective_total = total_amount if total_amount > 0 else parsed_total

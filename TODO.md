@@ -22,7 +22,8 @@
 - [x] Build `src/web/templates/index.html` — upload + results page
 - [x] Wire up `src/main.py` — FastAPI app entry point
 - [x] Test end-to-end demo flow with sample invoice (paste text)
-- [ ] Test PDF upload flow
+- [x] Test PDF upload flow — parser works but inaccurate: regex can't handle real-world PDF layouts (single-space columns, multi-line values, no $ signs)
+- [ ] Switch to vision-based approach for reliable line-item extraction (GPT-4o or similar)
 - [ ] Polish UI for mentor demo
 - [ ] Write demo script (~10 min walkthrough)
 

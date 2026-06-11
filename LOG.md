@@ -13,3 +13,12 @@
 - Verified full pipeline end-to-end: startup → GET / → POST /analyze → results render correctly
 - Tested with sample invoice ($51,900): 24,063 kg CO₂ footprint, 121,893 kg offset at 1.25%, gap fully covered, recommendation to keep 1.25%
 - Committed 29 files (1,105 lines) and pushed to GitHub
+
+## 2026-06-11
+- Relaxed parser regex patterns (\s{2,} → \s+) to handle single-space column separators from pypdf extraction
+- Added multi-line grouping fallback (description line + price line pairing) for common pypdf output format
+- Added header/label keyword filtering to prevent column headers and label-value lines from being parsed as items
+- Added raw text preview in error response when parsing yields 0 items
+- Confirmed parser still fails on arbitrary real-world PDF layouts — regex approach fundamentally limited
+- Decision: switch to vision-based approach (GPT-4o or similar) for reliable line-item extraction
+- Created sample invoice with 7 line items ($51,900 total) for demo testing
