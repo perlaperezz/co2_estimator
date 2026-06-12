@@ -15,7 +15,7 @@ class Settings:
     DEFAULT_CURRENCY: str = "USD"
     GDP_FALLBACK: float = 0.26
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-    VISION_MODEL: str = "gemini-1.5-flash"
+    VISION_MODEL: str = "gemini-flash-latest"
 
 
 settings = Settings()

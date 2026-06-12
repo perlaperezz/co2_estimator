@@ -1,4 +1,5 @@
 import io
+import re
 import json
 import base64
 from typing import List, Tuple, Optional
@@ -63,16 +64,13 @@ def _call_gemini(image_bytes: bytes) -> dict:
     response = client.models.generate_content(
         model=settings.VISION_MODEL,
         contents=[EXTRACTION_PROMPT, img_ref],
-        config={
-            "response_mime_type": "application/json",
-        },
     )
     text = (response.text or "").strip()
     if not text:
         return {"line_items": [], "invoice_total": 0}
-    if text.startswith("```"):
-        text = text.split("\n", 1)[-1]
-        text = text.rsplit("```", 1)[0]
+    m = re.search(r"\{.*\}", text, re.DOTALL)
+    if m:
+        return json.loads(m.group())
     return json.loads(text)
 
 
