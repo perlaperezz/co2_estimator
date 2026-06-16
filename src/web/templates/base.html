@@ -5,19 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CO₂ Estimator — Floras</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    sage: {
+                        50: '#f5f5ed',
+                        100: '#ebebdb',
+                        200: '#d7d7b7',
+                        300: '#c3c393',
+                        400: '#afaf77',
+                        500: '#7e7e4d;',
+                        600: '#7d7d4a',
+                        700: '#5e5e38',
+                        800: '#3f3f25',
+                        900: '#51723c',
+                    }
+                }
+            }
+        }
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
 </head>
-<body class="h-full bg-gray-50">
+<body class="h-full bg-gray-50 font-sans">
     <div class="min-h-full flex flex-col">
-        <header class="bg-emerald-700 text-white">
-            <div class="max-w-6xl mx-auto px-4 py-4 flex items-center gap-3">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
-                </svg>
+        <header>
+            <div class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
+                <img src="/static/floras_logo.jpeg" alt="Floras" class="h-7 w-auto shrink-0">
                 <div>
-                    <h1 class="text-xl font-bold">CO₂ Estimator</h1>
-                    <p class="text-emerald-200 text-sm">by Floras — climate intelligence for your supply chain</p>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-sage-400 text-sm font-medium hidden sm:inline">CO₂ Estimator</span>
+                    </div>
+                    <p class="text-sage-400/70 text-xs">climate intelligence for your supply chain</p>
                 </div>
             </div>
         </header>
@@ -26,8 +50,11 @@
             {% block content %}{% endblock %}
         </main>
 
-        <footer class="bg-gray-100 border-t py-4 text-center text-sm text-gray-500">
-            Powered by Floras &mdash; turning transactions into climate action
+        <footer class="border-t border-gray-200 py-6 text-center text-sm text-sage-400/60">
+            <div class="max-w-6xl mx-auto px-4">
+                <p class="font-medium text-sage-400/80 mb-1">Turning transactions into climate action</p>
+                <p>&copy; 2026 Floras. All rights reserved.</p>
+            </div>
         </footer>
     </div>
 </body>

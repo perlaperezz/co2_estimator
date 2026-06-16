@@ -10,6 +10,10 @@ from src.models.invoice import InvoiceItem
 from src.config import settings
 
 
+class QuotaExhausted(Exception):
+    pass
+
+
 EXTRACTION_PROMPT = """You are an invoice data extraction system. Analyze this invoice image and extract ALL line items as JSON.
 
 Return ONLY valid JSON (no markdown, no explanation):
@@ -98,18 +102,20 @@ def _parse_items(data: dict) -> Tuple[List[InvoiceItem], float]:
 def extract_from_pdf_vision(file_bytes: bytes) -> Optional[Tuple[List[InvoiceItem], float]]:
     if not settings.GEMINI_API_KEY:
         return None
-    try:
-        page_images = _pdf_to_images(file_bytes, dpi=200)
-        all_items: List[InvoiceItem] = []
-        total = 0.0
-        for img_bytes in page_images:
+    page_images = _pdf_to_images(file_bytes, dpi=200)
+    all_items: List[InvoiceItem] = []
+    total = 0.0
+    for img_bytes in page_images:
+        try:
             data = _call_gemini(img_bytes)
-            items, page_total = _parse_items(data)
-            all_items.extend(items)
-            if page_total > 0:
-                total = page_total
-        if not all_items:
+        except Exception as e:
+            if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                raise QuotaExhausted()
             return None
-        return all_items, total
-    except Exception:
+        items, page_total = _parse_items(data)
+        all_items.extend(items)
+        if page_total > 0:
+            total = page_total
+    if not all_items:
         return None
+    return all_items, total

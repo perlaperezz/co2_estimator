@@ -89,7 +89,7 @@ def get_recommendation(
     recommended_rate = max(rate, round(recommended_rate, 2))
 
     if floras_calc.fully_offset:
-        summary = f"✅ Your current {rate}% Floras allocation fully covers this invoice's CO₂ footprint."
+        summary = f"Your current {rate}% Floras allocation fully covers this invoice's CO₂ footprint."
     else:
         coverage = floras_calc.offset_percentage
         summary = (

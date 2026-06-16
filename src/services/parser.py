@@ -2,7 +2,7 @@ import re
 import io
 from typing import List, Tuple, Optional
 from src.models.invoice import InvoiceItem
-from src.services.vision import extract_from_pdf_vision
+from src.services.vision import extract_from_pdf_vision, QuotaExhausted
 
 
 def parse_text(text: str) -> Tuple[List[InvoiceItem], float]:
@@ -102,10 +102,13 @@ def parse_text(text: str) -> Tuple[List[InvoiceItem], float]:
     return items, round(final_total, 2)
 
 
-def extract_from_pdf(file_bytes: bytes) -> Optional[Tuple[List[InvoiceItem], float]]:
-    result = extract_from_pdf_vision(file_bytes)
-    if result is not None:
-        return result
+def extract_from_pdf(file_bytes: bytes):
+    try:
+        result = extract_from_pdf_vision(file_bytes)
+        if result is not None:
+            return result
+    except QuotaExhausted:
+        return "QUOTA"
     return _extract_text_from_pdf_fallback(file_bytes)
 
 

@@ -41,11 +41,18 @@ async def analyze(
     if pdf_file and pdf_file.filename and pdf_file.filename.lower().endswith(".pdf"):
         file_bytes = await pdf_file.read()
         result = extract_from_pdf(file_bytes)
+        if result == "QUOTA":
+            return templates.TemplateResponse("index.html", {
+                "request": request,
+                "result": None,
+                "error": "Gemini API free quota reached for today. Paste invoice text directly or try again tomorrow.",
+                "sample_text": "",
+            })
         if result is None:
             return templates.TemplateResponse("index.html", {
                 "request": request,
                 "result": None,
-                "error": "Could not extract line items from PDF. The AI vision parser failed. Try pasting invoice text instead.",
+                "error": "Could not extract line items from PDF. Try pasting invoice text instead.",
                 "sample_text": "",
             })
         items, parsed_total = result
