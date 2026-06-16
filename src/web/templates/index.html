@@ -216,43 +216,242 @@
         {% endif %}
     </div>
 
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">Recommended Floras Projects</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8" id="allocation-dashboard">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Floras Allocation Dashboard</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <div class="border-l-4 border-sage-500 bg-sage-50/50 rounded-xl p-4">
+                <div class="text-xs text-gray-500 uppercase tracking-wide font-medium">Floras Allocated</div>
+                <div class="text-2xl font-bold text-gray-900 mt-1">
+                    <span id="live-floras">{{ "%.0f"|format(r.recommendation.floras_calculation.total_floras) }}</span>
+                    <span class="text-sm font-normal text-gray-500">/ {{ "%.0f"|format(r.recommendation.floras_calculation.total_floras) }}</span>
+                </div>
+            </div>
+            <div class="border-l-4 border-blue-500 bg-blue-50/50 rounded-xl p-4">
+                <div class="text-xs text-gray-500 uppercase tracking-wide font-medium">CO₂ Offset</div>
+                <div class="text-2xl font-bold text-blue-700 mt-1">
+                    <span id="live-offset">{{ "%.0f"|format(r.recommendation.floras_calculation.current_offset_kg) }}</span>
+                    <span class="text-sm font-normal text-gray-500">kg CO₂</span>
+                </div>
+            </div>
+            <div id="gap-card" class="border-l-4 {% if r.recommendation.floras_calculation.fully_offset %}border-sage-500 bg-sage-50/50{% else %}border-amber-500 bg-amber-50/50{% endif %} rounded-xl p-4">
+                <div class="text-xs text-gray-500 uppercase tracking-wide font-medium">Gap Remaining</div>
+                <div class="text-2xl font-bold {% if r.recommendation.floras_calculation.fully_offset %}text-sage-700{% else %}text-amber-700{% endif %} mt-1">
+                    <span id="live-gap">{{ "%.0f"|format(r.recommendation.floras_calculation.gap_kg) }}</span>
+                    <span class="text-sm font-normal {% if r.recommendation.floras_calculation.fully_offset %}text-sage-500{% else %}text-amber-500{% endif %}">kg CO₂</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <div class="flex justify-between text-xs text-gray-400 mb-1">
+                <span>Offset Progress</span>
+                <span id="live-pct">{{ "%.1f"|format(r.recommendation.floras_calculation.offset_percentage) }}%</span>
+            </div>
+            <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                <div id="live-bar" class="h-3 rounded-full transition-all duration-300 {% if r.recommendation.floras_calculation.fully_offset %}bg-sage-500{% else %}bg-red-500{% endif %}" style="width: {{ r.recommendation.floras_calculation.offset_percentage }}%"></div>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3 mb-6">
+            <button id="maximize-btn"
+                class="bg-sage-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-sage-700 active:bg-sage-800 transition shadow-sm">
+                Maximize Impact
+            </button>
+            <button id="reset-btn"
+                class="bg-white text-gray-600 px-5 py-2 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-50 transition">
+                Reset to Default
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="project-cards">
             {% for alloc in r.recommendation.allocations %}
-            <div class="border border-gray-100 rounded-xl overflow-hidden hover:shadow-md hover:border-sage-200 transition-all bg-white">
-                <img src="{{ alloc.project.image_url }}" alt="{{ alloc.project.name }}"
+            {% set p = alloc.project %}
+            {% set idx = loop.index0 %}
+            <div class="border border-gray-100 rounded-xl overflow-hidden hover:shadow-md hover:border-sage-200 transition-all bg-white project-card" data-index="{{ idx }}" data-co2="{{ p.co2e_per_flora }}">
+                {% if p.image_url.startswith('http') %}
+                <img src="{{ p.image_url }}" alt="{{ p.name }}"
                      class="w-full h-40 object-cover"
                      onerror="this.onerror=null; this.src='/static/floras_logo.jpeg'"
                      loading="lazy">
+                {% else %}
+                <img src="/static/floras_logo.jpeg" alt="{{ p.name }}"
+                     class="w-full h-40 object-cover" loading="lazy">
+                {% endif %}
                 <div class="p-4">
-                    <div class="flex items-start justify-between mb-1.5">
-                        <h3 class="font-semibold text-gray-800 text-sm leading-snug">{{ alloc.project.name }}</h3>
-                        <span class="text-xs bg-sage-100 text-sage-700 px-2.5 py-0.5 rounded-full font-medium shrink-0 ml-2">{{ alloc.project.provider }}</span>
+                    <div class="flex items-start justify-between mb-1">
+                        <h3 class="font-semibold text-gray-800 text-sm leading-snug">{{ p.name }}</h3>
+                        <span class="text-xs bg-sage-100 text-sage-700 px-2.5 py-0.5 rounded-full font-medium shrink-0 ml-2">{{ p.provider }}</span>
                     </div>
-                    <div class="text-xs text-gray-400 mb-3">{{ alloc.project.category }}</div>
-                    <div class="grid grid-cols-3 gap-2 text-xs mb-3">
-                        <div class="bg-gray-50 rounded-lg p-2">
-                            <span class="text-gray-400">CO₂ / Flora</span>
-                            <div class="font-semibold text-gray-800">{{ "%.0f"|format(alloc.project.co2e_per_flora) }} kg</div>
-                        </div>
-                        <div class="bg-gray-50 rounded-lg p-2">
-                            <span class="text-gray-400">Floras</span>
-                            <div class="font-semibold text-gray-800">{{ "%.0f"|format(alloc.floras_allocated) }}</div>
-                        </div>
-                        <div class="bg-gray-50 rounded-lg p-2">
-                            <span class="text-gray-400">Offset</span>
-                            <div class="font-semibold text-sage-700">{{ "%.0f"|format(alloc.co2_offset_kg) }} kg</div>
+                    <div class="text-xs text-gray-400 mb-2">{{ p.category }} &middot; {{ p.location }}</div>
+                    <div class="bg-sage-50 rounded-lg px-2.5 py-1 text-xs text-sage-700 font-medium inline-block mb-2">
+                        {{ "%.0f"|format(p.co2e_per_flora) }} kg CO₂ / Flora
+                    </div>
+                    <div class="space-y-1.5">
+                        <input type="range" class="flora-slider w-full accent-sage-600"
+                               min="0" max="{{ "%.0f"|format(r.recommendation.floras_calculation.total_floras) }}"
+                               step="1" value="{{ "%.0f"|format(alloc.floras_allocated) }}"
+                               data-index="{{ idx }}">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-gray-500"><span class="slider-floras font-semibold text-gray-700">{{ "%.0f"|format(alloc.floras_allocated) }}</span> Floras</span>
+                            <span class="text-gray-500"><span class="slider-offset font-semibold text-sage-700">{{ "%.0f"|format(alloc.co2_offset_kg) }}</span> kg offset</span>
                         </div>
                     </div>
-                    <button class="w-full bg-sage-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-sage-700 active:bg-sage-800 transition shadow-sm">
-                        Allocate Floras &rarr;
-                    </button>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
+
+<script>
+(function() {
+    var totalFloras = {{ "%.0f"|format(r.recommendation.floras_calculation.total_floras) }};
+    var totalCo2 = {{ "%.0f"|format(r.total_co2_kg) }};
+    var co2Rates = [{% for alloc in r.recommendation.allocations %}{{ "%.2f"|format(alloc.project.co2e_per_flora) }},{% endfor %}];
+    var n = co2Rates.length;
+    var sliders = document.querySelectorAll('.flora-slider');
+    var florasDisplay = document.querySelectorAll('.slider-floras');
+    var offsetDisplay = document.querySelectorAll('.slider-offset');
+
+    function getValues() {
+        return Array.from(sliders).map(function(s) { return parseFloat(s.value) || 0; });
+    }
+
+    function updateAll(values) {
+        for (var i = 0; i < n; i++) {
+            var v = Math.round(values[i]);
+            sliders[i].value = v;
+            florasDisplay[i].textContent = v;
+            offsetDisplay[i].textContent = Math.round(v * co2Rates[i]);
+        }
+        updateStats(values);
+    }
+
+    function updateStats(values) {
+        var totalF = 0, totalO = 0;
+        for (var i = 0; i < n; i++) {
+            totalF += values[i];
+            totalO += values[i] * co2Rates[i];
+        }
+        var gap = Math.max(0, totalCo2 - totalO);
+        var pct = totalCo2 > 0 ? (totalO / totalCo2 * 100) : 0;
+
+        document.getElementById('live-floras').textContent = Math.round(totalF);
+        document.getElementById('live-offset').textContent = Math.round(totalO);
+        document.getElementById('live-gap').textContent = Math.round(gap);
+        document.getElementById('live-pct').textContent = pct.toFixed(1) + '%';
+
+        var pctClamped = Math.min(pct, 100);
+        document.getElementById('live-bar').style.width = pctClamped + '%';
+
+        var bar = document.getElementById('live-bar');
+        var gapCard = document.getElementById('gap-card');
+        var gapText = document.getElementById('live-gap');
+        var gapUnit = gapText.nextElementSibling;
+        if (gap <= 0) {
+            bar.className = 'h-3 rounded-full transition-all duration-300 bg-sage-500';
+            gapCard.className = 'border-l-4 border-sage-500 bg-sage-50/50 rounded-xl p-4';
+            gapText.className = 'text-2xl font-bold text-sage-700 mt-1';
+            gapUnit.className = 'text-sm font-normal text-sage-500';
+        } else {
+            bar.className = 'h-3 rounded-full transition-all duration-300 bg-red-500';
+            gapCard.className = 'border-l-4 border-amber-500 bg-amber-50/50 rounded-xl p-4';
+            gapText.className = 'text-2xl font-bold text-amber-700 mt-1';
+            gapUnit.className = 'text-sm font-normal text-amber-500';
+        }
+    }
+
+    function redistribute(changedIdx, newVal) {
+        newVal = Math.max(0, Math.min(totalFloras, newVal));
+        var oldValues = getValues();
+        var values = oldValues.slice();
+        values[changedIdx] = newVal;
+
+        var otherSum = 0;
+        for (var i = 0; i < n; i++) {
+            if (i !== changedIdx) otherSum += values[i];
+        }
+        var availableForOthers = totalFloras - newVal;
+
+        if (otherSum <= 0.001 || availableForOthers <= 0) {
+            availableForOthers = Math.max(0, availableForOthers);
+            var each = Math.floor(availableForOthers / (n - 1));
+            var remainder = Math.round(availableForOthers - each * (n - 1));
+            for (var i = 0; i < n; i++) {
+                if (i !== changedIdx) {
+                    values[i] = each;
+                }
+            }
+            for (var i = 0; i < n && remainder > 0; i++) {
+                if (i !== changedIdx) { values[i] += 1; remainder--; }
+            }
+        } else {
+            for (var i = 0; i < n; i++) {
+                if (i !== changedIdx) {
+                    var proportion = oldValues[i] / otherSum;
+                    values[i] = Math.round(availableForOthers * proportion);
+                }
+            }
+            var sum = 0;
+            for (var i = 0; i < n; i++) sum += values[i];
+            var diff = Math.round(totalFloras) - sum;
+            var candidates = [];
+            for (var i = 0; i < n; i++) {
+                if (i !== changedIdx) candidates.push({idx: i, val: values[i]});
+            }
+            candidates.sort(function(a, b) { return b.val - a.val; });
+            while (diff !== 0 && candidates.length > 0) {
+                if (diff > 0) {
+                    values[candidates[0].idx] += 1;
+                    diff--;
+                } else {
+                    for (var c = 0; c < candidates.length; c++) {
+                        if (values[candidates[c].idx] > 0) {
+                            values[candidates[c].idx] -= 1;
+                            diff++;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        for (var i = 0; i < n; i++) {
+            values[i] = Math.max(0, Math.round(values[i]));
+        }
+        return values;
+    }
+
+    for (var i = 0; i < n; i++) {
+        sliders[i].addEventListener('input', (function(idx) {
+            return function() {
+                var newVal = parseFloat(this.value) || 0;
+                var values = redistribute(idx, newVal);
+                updateAll(values);
+            };
+        })(i));
+    }
+
+    document.getElementById('maximize-btn').addEventListener('click', function() {
+        var values = new Array(n).fill(0);
+        var maxIdx = 0;
+        for (var i = 1; i < n; i++) {
+            if (co2Rates[i] > co2Rates[maxIdx]) maxIdx = i;
+        }
+        values[maxIdx] = Math.round(totalFloras);
+        updateAll(values);
+    });
+
+    document.getElementById('reset-btn').addEventListener('click', function() {
+        var values = new Array(n).fill(Math.floor(totalFloras / n));
+        var sum = 0;
+        for (var i = 0; i < n; i++) sum += values[i];
+        var remainder = Math.round(totalFloras) - sum;
+        for (var i = 0; i < remainder; i++) values[i] += 1;
+        updateAll(values);
+    });
+})();
+</script>
 
     {% endif %}
 
