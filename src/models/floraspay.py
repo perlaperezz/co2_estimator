@@ -9,6 +9,7 @@ class FlorasProject(BaseModel):
     location: str
     description: str
     provider: str
+    image_url: str = ""
 
 
 class ProjectAllocation(BaseModel):

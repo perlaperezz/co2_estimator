@@ -20,7 +20,7 @@ This tool reads uploaded invoices, estimates their CO2 footprint, calculates how
 |-------|--------|
 | Backend | Python 3.9+, FastAPI |
 | Frontend | Jinja2 templates + Tailwind CSS (CDN) |
-| Invoice parsing | Regex-based line item extraction (primary) + pypdf (text PDFs) + pdf2image/tesseract (scanned PDFs, optional) |
+| Invoice parsing | Vision-first PDF extraction via Gemini API (primary) + pypdf/regex fallback (text paste) |
 | AI orchestration | OpenCode with `deepseek-v4-flash` for orchestrator (future: invoice reading + analysis) |
 | CO2 knowledge base | Local CSV (`data/knowledge_base.csv`) distilled from EPA, DEFRA, OWID, EDGAR |
 | Floras projects | Local CSV (`data/floras_projects.csv`) with 18 projects and co2e_per_flora rates |
@@ -37,19 +37,20 @@ This tool reads uploaded invoices, estimates their CO2 footprint, calculates how
 | **designer** | `kimi-k2.6` | UI/UX, frontend polish |
 | **observer** | `kimi-k2.6` | Monitoring, logging, demo walkthrough |
 
-## Invoice Processing Pipeline (Primary: PDF)
+## Invoice Processing Pipeline
 
 1. User uploads PDF invoice via web UI
-2. pdf2image converts PDF pages to images
-3. OCR (pytesseract) extracts raw text
-4. DeepSeek V4 Flash (orchestrator) parses line items from text
-5. Each line item is categorized (freight, materials, energy, travel, services, packaging)
-6. knowledge_base.csv is queried for matching CO2 factors
-7. CO2 footprint is calculated per item and totaled
-8. Floras offset = total_transaction_value × 1.25% × offset_rate_from_knowledge_base
-9. Gap = total_CO2 - Floras_offset
-10. Recommendation engine determines if 1.25% is sufficient or suggests higher rate
-11. Project matching suggests best Floras projects for the emission profile
+2. pymupdf renders PDF pages to PNG images (200 DPI)
+3. Gemini flash-latest vision API extracts line items as structured JSON
+4. On API failure (non-quota): fallback to pypdf text extraction + regex parser
+5. On quota exhaustion: user sees clear message to retry tomorrow
+6. Each line item is categorized (freight, materials, energy, travel, services, packaging)
+7. knowledge_base.csv is queried for matching CO2 factors
+8. CO2 footprint is calculated per item and totaled
+9. Floras offset = total_transaction_value × 1.25% × offset_rate_from_knowledge_base
+10. Gap = total_CO2 - Floras_offset
+11. Recommendation engine determines if 1.25% is sufficient or suggests higher rate
+12. Project matching suggests best Floras projects for the emission profile
 
 ## Coding Rules
 
@@ -87,6 +88,7 @@ co2_estimator/
 │   ├── services/
 │   │   ├── __init__.py
 │   │   ├── parser.py       # PDF → image → OCR → text
+│   │   ├── vision.py       # Gemini API vision PDF extraction
 │   │   ├── categorizer.py  # classify line items
 │   │   ├── estimator.py    # CO2 estimation from KB
 │   │   ├── florascalc.py   # Floras offset math

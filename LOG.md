@@ -20,5 +20,17 @@
 - Added header/label keyword filtering to prevent column headers and label-value lines from being parsed as items
 - Added raw text preview in error response when parsing yields 0 items
 - Confirmed parser still fails on arbitrary real-world PDF layouts — regex approach fundamentally limited
-- Decision: switch to vision-based approach (GPT-4o or similar) for reliable line-item extraction
+- Decision: switch to vision-based approach for reliable line-item extraction
 - Created sample invoice with 7 line items ($51,900 total) for demo testing
+
+## 2026-06-16
+- Implemented QuotaExhausted exception in vision.py — catches 429/RESOURCE_EXHAUSTED from Gemini API
+- Quota exhaustion now shows clear "retry tomorrow" message instead of falling back to inaccurate regex parsing
+- Full Floras frontend rebrand:
+  - Custom sage color palette (#9c9c5d) via Tailwind CDN config
+  - Added Floras logo to header
+  - Inter font from Google Fonts
+  - Hero banner with "Turn Every Transaction Into Climate Action"
+  - Redesigned result cards with left-border accents
+  - Polished project cards with hover effects and compact metrics
+  - Removed header/footer background — sage text only on light gray

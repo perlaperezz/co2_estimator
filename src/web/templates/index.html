@@ -220,26 +220,34 @@
         <h2 class="text-lg font-semibold text-gray-800 mb-4">Recommended Floras Projects</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             {% for alloc in r.recommendation.allocations %}
-            <div class="border border-gray-100 rounded-xl p-4 hover:shadow-md hover:border-sage-200 transition-all bg-white">
-                <div class="flex items-start justify-between mb-2">
-                    <h3 class="font-semibold text-gray-800 text-sm leading-snug">{{ alloc.project.name }}</h3>
-                    <span class="text-xs bg-sage-100 text-sage-700 px-2.5 py-0.5 rounded-full font-medium shrink-0 ml-2">{{ alloc.project.provider }}</span>
-                </div>
-                <div class="text-xs text-gray-400 mb-2">{{ alloc.project.category }} &middot; {{ alloc.project.location }}</div>
-                <p class="text-xs text-gray-500 mb-3 line-clamp-2">{{ alloc.project.description[:120] }}{% if alloc.project.description|length > 120 %}...{% endif %}</p>
-                <div class="grid grid-cols-3 gap-2 text-xs">
-                    <div class="bg-gray-50 rounded-lg p-2">
-                        <span class="text-gray-400">CO₂ / Flora</span>
-                        <div class="font-semibold text-gray-800">{{ "%.0f"|format(alloc.project.co2e_per_flora) }} kg</div>
+            <div class="border border-gray-100 rounded-xl overflow-hidden hover:shadow-md hover:border-sage-200 transition-all bg-white">
+                <img src="{{ alloc.project.image_url }}" alt="{{ alloc.project.name }}"
+                     class="w-full h-40 object-cover"
+                     onerror="this.onerror=null; this.src='/static/floras_logo.jpeg'"
+                     loading="lazy">
+                <div class="p-4">
+                    <div class="flex items-start justify-between mb-1.5">
+                        <h3 class="font-semibold text-gray-800 text-sm leading-snug">{{ alloc.project.name }}</h3>
+                        <span class="text-xs bg-sage-100 text-sage-700 px-2.5 py-0.5 rounded-full font-medium shrink-0 ml-2">{{ alloc.project.provider }}</span>
                     </div>
-                    <div class="bg-gray-50 rounded-lg p-2">
-                        <span class="text-gray-400">Floras</span>
-                        <div class="font-semibold text-gray-800">{{ "%.0f"|format(alloc.floras_allocated) }}</div>
+                    <div class="text-xs text-gray-400 mb-3">{{ alloc.project.category }}</div>
+                    <div class="grid grid-cols-3 gap-2 text-xs mb-3">
+                        <div class="bg-gray-50 rounded-lg p-2">
+                            <span class="text-gray-400">CO₂ / Flora</span>
+                            <div class="font-semibold text-gray-800">{{ "%.0f"|format(alloc.project.co2e_per_flora) }} kg</div>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-2">
+                            <span class="text-gray-400">Floras</span>
+                            <div class="font-semibold text-gray-800">{{ "%.0f"|format(alloc.floras_allocated) }}</div>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-2">
+                            <span class="text-gray-400">Offset</span>
+                            <div class="font-semibold text-sage-700">{{ "%.0f"|format(alloc.co2_offset_kg) }} kg</div>
+                        </div>
                     </div>
-                    <div class="bg-gray-50 rounded-lg p-2">
-                        <span class="text-gray-400">Offset</span>
-                        <div class="font-semibold text-sage-700">{{ "%.0f"|format(alloc.co2_offset_kg) }} kg</div>
-                    </div>
+                    <button class="w-full bg-sage-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-sage-700 active:bg-sage-800 transition shadow-sm">
+                        Allocate Floras &rarr;
+                    </button>
                 </div>
             </div>
             {% endfor %}

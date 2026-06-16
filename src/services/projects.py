@@ -15,6 +15,9 @@ def load_projects() -> List[FlorasProject]:
     with open(settings.PROJECTS_PATH, "r") as f:
         reader = csv.DictReader(f)
         for row in reader:
+            raw_url = row.get("image_url", "").strip('"')
+            if raw_url.lower() == "floras.png":
+                raw_url = "/static/floras_logo.jpeg"
             projects.append(FlorasProject(
                 id=int(row["id"]),
                 name=row["name"],
@@ -23,6 +26,7 @@ def load_projects() -> List[FlorasProject]:
                 location=row["location"],
                 description=row["description"],
                 provider=row["provider"],
+                image_url=raw_url,
             ))
     _projects_cache = projects
     return projects

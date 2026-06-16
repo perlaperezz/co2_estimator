@@ -23,8 +23,9 @@
 - [x] Wire up `src/main.py` — FastAPI app entry point
 - [x] Test end-to-end demo flow with sample invoice (paste text)
 - [x] Test PDF upload flow — parser works but inaccurate: regex can't handle real-world PDF layouts (single-space columns, multi-line values, no $ signs)
-- [ ] Switch to vision-based approach for reliable line-item extraction (GPT-4o or similar)
-- [ ] Polish UI for mentor demo
+- [x] Switch to vision-based approach for reliable line-item extraction (Gemini flash-latest)
+- [x] Polish UI — Floras rebrand (sage palette, logo, Inter font, hero banner)
+- [x] Quota exhaustion error handling with clear user messaging
 - [ ] Write demo script (~10 min walkthrough)
 
 ## Nice to Have
