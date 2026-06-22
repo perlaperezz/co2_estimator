@@ -287,6 +287,13 @@
                     <div class="bg-sage-50 rounded-lg px-2.5 py-1 text-xs text-sage-700 font-medium inline-block mb-2">
                         {{ "%.0f"|format(p.co2e_per_flora) }} kg CO₂ / Flora
                     </div>
+                    {% if p.description %}
+                    <div class="desc-snippet text-xs text-gray-500 mb-2">{{ p.description[:100] }}{% if p.description|length > 100 %}...{% endif %}</div>
+                    {% if p.description|length > 100 %}
+                    <div class="desc-full text-xs text-gray-500 mb-2 hidden">{{ p.description }}</div>
+                    <button class="toggle-desc text-xs text-sage-600 hover:text-sage-700 font-medium mb-2 block">Read more</button>
+                    {% endif %}
+                    {% endif %}
                     <div class="space-y-1.5">
                         <input type="range" class="flora-slider w-full accent-sage-600"
                                min="0" max="{{ "%.0f"|format(r.recommendation.floras_calculation.total_floras) }}"
@@ -449,6 +456,15 @@
         var remainder = Math.round(totalFloras) - sum;
         for (var i = 0; i < remainder; i++) values[i] += 1;
         updateAll(values);
+    });
+
+    document.querySelectorAll('.toggle-desc').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var card = this.closest('.project-card');
+            card.querySelector('.desc-snippet').classList.toggle('hidden');
+            card.querySelector('.desc-full').classList.toggle('hidden');
+            this.textContent = this.textContent === 'Read more' ? 'Show less' : 'Read more';
+        });
     });
 })();
 </script>

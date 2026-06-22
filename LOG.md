@@ -34,3 +34,13 @@
   - Redesigned result cards with left-border accents
   - Polished project cards with hover effects and compact metrics
   - Removed header/footer background — sage text only on light gray
+
+## 2026-06-22
+- Added image_url column to floras_projects.csv and FlorasProject model
+- Redesigned project cards to display hosted images with branded fallback
+- Built interactive Floras allocation dashboard:
+  - Proportional slider redistribution (adjusting one scales others proportionally)
+  - Live stats panel: total Floras, CO₂ offset, gap remaining, progress bar (red→green)
+  - Maximize Impact: allocates all Floras to highest CO₂e/Flora project
+  - Reset to Default: returns to even split
+- Added inline project description toggle (Read more / Show less) per card

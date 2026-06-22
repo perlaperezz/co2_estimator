@@ -28,6 +28,16 @@
 - [x] Quota exhaustion error handling with clear user messaging
 - [ ] Write demo script (~10 min walkthrough)
 
+## Interactive Dashboard
+
+- [x] Add image_url column to projects CSV and FlorasProject model
+- [x] Redesign project cards with hosted images and branded fallback
+- [x] Build interactive Floras allocation dashboard with live sliders
+- [x] Add proportional slider redistribution logic
+- [x] Add live stats panel (Floras, offset, gap, progress bar)
+- [x] Add Maximize Impact / Reset to Default buttons
+- [x] Add inline project description toggle (Read more / Show less)
+
 ## Nice to Have
 
 - [ ] Multi-currency invoice support
