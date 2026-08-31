@@ -6,7 +6,7 @@ Climate intelligence for your supply chain — estimate the carbon footprint of 
 
 CO₂ Estimator reads uploaded invoices (text paste or PDF), extracts line items via AI-powered vision, estimates each item's CO₂ footprint using a curated knowledge base of emission factors, calculates how much a supplier's Floras contribution offsets, and recommends optimal contribution rates and climate projects.
 
-Built for [**Floras**](https://floras.io) — the climate currency platform that turns business transactions into climate action.
+Built for [**Floras**](https://floras.io), the climate currency platform that turns business transactions into climate action.
 
 ## Key Features
 
@@ -78,8 +78,18 @@ CO₂ Estimator is the intelligence layer of the Floras ecosystem. It gives ente
 
 ## Screenshot
 
-<!-- Replace with your screenshot URL -->
-![CO₂ Estimator screenshot](placeholder-screenshot.png)
+<p align="center">
+ <img
+    src="https://github.com/user-attachments/assets/0509b7c3-3ddb-4f3a-a8a4-ef9b5a35fc82"
+    alt="Invoice upload screen"
+    width="49%"
+  />
+  <img
+    src="https://github.com/user-attachments/assets/2608561a-fd70-4a53-a7c9-98de53d8d10f"
+    alt="Invoice analysis results"
+    width="49%"
+  />
+</p>
 
 ## Acknowledgements
 
